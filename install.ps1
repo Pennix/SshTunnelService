@@ -17,10 +17,21 @@ $tunnel = @{
     Host = Read-Host -Prompt "SSH Host (e.g., ssh.example.com)"
     Port = Read-Host -Prompt "SSH Port" -Default "22"
     Username = Read-Host -Prompt "SSH Username"
-    PrivateKeyPath = Read-Host -Prompt "Path to your SSH Private Key (e.g., C:\Users\user\.ssh\id_rsa)"
-    LocalForward = (Read-Host -Prompt "Local Forwards (comma-separated, e.g., 8080:localhost:80,8443:localhost:443)").Split(',') | ForEach-Object { $_.Trim() }
-    RemoteForward = (Read-Host -Prompt "Remote Forwards (comma-separated, e.g., 8888:localhost:8888)").Split(',') | ForEach-Object { $_.Trim() }
 }
+
+$originalKeyPath = Read-Host -Prompt "Path to your SSH Private Key (e.g., C:\Users\user\.ssh\id_rsa)"
+$tunnel.LocalForward = (Read-Host -Prompt "Local Forwards (comma-separated, e.g., 8080:localhost:80,8443:localhost:443)").Split(',') | ForEach-Object { $_.Trim() }
+$tunnel.RemoteForward = (Read-Host -Prompt "Remote Forwards (comma-separated, e.g., 8888:localhost:8888)").Split(',') | ForEach-Object { $_.Trim() }
+
+# --- Create Secure Key Directory and Copy Key ---
+$secureKeyPath = Join-Path $InstallPath "keys"
+New-Item -ItemType Directory -Force -Path $secureKeyPath
+$newKeyPath = Join-Path $secureKeyPath "id_rsa"
+Copy-Item -Path $originalKeyPath -Destination $newKeyPath
+
+# Set permissions to LocalSystem only
+icacls.exe $newKeyPath /inheritance:r /grant "NT AUTHORITY\SYSTEM:(R)"
+$tunnel.PrivateKeyPath = $newKeyPath
 
 # --- Create appsettings.json content ---
 $appSettings = @{
