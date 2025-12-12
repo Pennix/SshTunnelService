@@ -9,6 +9,6 @@ public class TunnelOptions
     public int Port { get; set; } = 22;
     public string Username { get; set; } = string.Empty;
     public string PrivateKeyPath { get; set; } = string.Empty;
-    public string LocalForward { get; set; } = string.Empty;
-    public string RemoteForward { get; set; } = string.Empty;
+    public List<string> LocalForward { get; set; } = new();
+    public List<string> RemoteForward { get; set; } = new();
 }

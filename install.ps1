@@ -18,8 +18,8 @@ $tunnel = @{
     Port = Read-Host -Prompt "SSH Port" -Default "22"
     Username = Read-Host -Prompt "SSH Username"
     PrivateKeyPath = Read-Host -Prompt "Path to your SSH Private Key (e.g., C:\Users\user\.ssh\id_rsa)"
-    LocalForward = Read-Host -Prompt "Local Forward (e.g., 8080:localhost:80), leave blank if not needed"
-    RemoteForward = Read-Host -Prompt "Remote Forward (e.g., 8888:localhost:8888), leave blank if not needed"
+    LocalForward = (Read-Host -Prompt "Local Forwards (comma-separated, e.g., 8080:localhost:80,8443:localhost:443)").Split(',') | ForEach-Object { $_.Trim() }
+    RemoteForward = (Read-Host -Prompt "Remote Forwards (comma-separated, e.g., 8888:localhost:8888)").Split(',') | ForEach-Object { $_.Trim() }
 }
 
 # --- Create appsettings.json content ---
