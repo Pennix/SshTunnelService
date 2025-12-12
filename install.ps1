@@ -12,12 +12,17 @@ param(
 # --- Gather SSH Tunnel Parameters ---
 Write-Host "Please provide the details for your SSH tunnel." -ForegroundColor Cyan
 
-$tunnel = @{
-    Name = Read-Host -Prompt "Tunnel Name (e.g., MyServerTunnel)"
-    Host = Read-Host -Prompt "SSH Host (e.g., ssh.example.com)"
+$tunnelName = Read-Host -Prompt "Tunnel Name (e.g., MyServerTunnel)"
+$tunnelHost = Read-Host -Prompt "SSH Host (e.g., ssh.example.com)"
 $portInput = Read-Host -Prompt "SSH Port (default: 22)"
-if ([string]::IsNullOrWhiteSpace($portInput)) { $tunnel.Port = "22" } else { $tunnel.Port = $portInput }
-    $tunnel.Username = Read-Host -Prompt "SSH Username"
+if ([string]::IsNullOrWhiteSpace($portInput)) { $tunnelPort = "22" } else { $tunnelPort = $portInput }
+$tunnelUsername = Read-Host -Prompt "SSH Username"
+
+$tunnel = @{
+    Name = $tunnelName
+    Host = $tunnelHost
+    Port = $tunnelPort
+    Username = $tunnelUsername
 }
 
 $originalKeyPath = Read-Host -Prompt "Path to your SSH Private Key (e.g., C:\Users\user\.ssh\id_rsa)"
