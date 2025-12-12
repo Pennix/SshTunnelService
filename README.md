@@ -63,6 +63,38 @@ The SSH tunnels are configured in the `appsettings.json` file. You can add one o
     sc.exe delete SshTunnelService
     ```
 
+## PowerShell Installer Scripts
+
+For easier installation and uninstallation on Windows, you can use the provided PowerShell scripts: `install.ps1` and `uninstall.ps1`.
+
+**Important:** These scripts must be run with Administrator privileges. You might need to adjust your PowerShell execution policy to run them (e.g., `Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process` for the current session).
+
+### `install.ps1`
+
+This script automates the setup of the `SshTunnelService` as a Windows Service:
+*   Downloads the latest release binary from GitHub (or uses a local ZIP if provided).
+*   Prompts you for SSH tunnel configuration parameters (Host, Port, Username, Private Key Path, Local Forwards, Remote Forwards).
+*   Copies your private SSH key to a secure location within the installation directory and sets appropriate permissions.
+*   Installs the service using `sc.exe`.
+*   Starts the service.
+
+**Usage:**
+```powershell
+.\install.ps1
+```
+
+### `uninstall.ps1`
+
+This script automates the removal of the `SshTunnelService`:
+*   Stops the running service.
+*   Deletes the service using `sc.exe`.
+*   Optionally removes the entire installation directory.
+
+**Usage:**
+```powershell
+.\uninstall.ps1
+```
+
 ## Logs
 
 The service logs events to the Windows Event Viewer. You can find the logs under "Windows Logs" > "Application" with the source name "SshTunnelService".
