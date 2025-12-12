@@ -1,0 +1,60 @@
+# Visual Studio Code
+.vscode/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+*.exe
+*.pdb
+*.dll
+*.suo
+*.user
+*.userprefs
+*.vs/
+*.tlog
+
+# Packages
+packages/
+*.nupkg
+*.snupkg
+*.appx
+*.msix
+*.zip
+
+# Rider
+.idea/
+*.sln.DotSettings
+*.csproj.DotSettings
+
+# Visual Studio
+.vs/
+*.bak
+*.log
+*.fsproj.user
+*.vcxproj.user
+*.dbmdl
+*.jfm
+
+# Test Results
+TestResults/
+*.trx
+*.runsettings
+
+# NuGet
+.nuget/
+*.nuget.log
+
+# npm
+node_modules/
+
+# misc
+.DS_Store
+*.seed
+*.pid
+*.boop
+*.log
+*.tmp
+*.temp
+*.cache
