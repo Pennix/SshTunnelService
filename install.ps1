@@ -32,7 +32,8 @@ $tunnel.RemoteForward = (Read-Host -Prompt "Remote Forwards (comma-separated, e.
 # --- Create Secure Key Directory and Copy Key ---
 $secureKeyPath = Join-Path $InstallPath "keys"
 New-Item -ItemType Directory -Force -Path $secureKeyPath
-$newKeyPath = Join-Path $secureKeyPath "id_rsa"
+$originalKeyFileName = Split-Path -Path $originalKeyPath -Leaf
+$newKeyPath = Join-Path $secureKeyPath $originalKeyFileName
 Copy-Item -Path $originalKeyPath -Destination $newKeyPath
 
 # Set permissions to LocalSystem only
