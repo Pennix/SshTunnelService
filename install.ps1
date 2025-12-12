@@ -54,13 +54,22 @@ $appSettings = @{
 }
 $appSettingsJson = $appSettings | ConvertTo-Json -Depth 5
 
-# --- Download and Unzip Release ---
-$releaseUrl = "https://github.com/Pennix/SshTunnelService/releases/download/v1.1.0/SshTunnelService-v1.1.0-win-x64.zip"
-$zipPath = Join-Path $env:TEMP "SshTunnelService.zip"
+# --- Prompt for Local Release File ---
+$localZipPath = Read-Host -Prompt "Path to local release ZIP file (optional, press Enter to download from GitHub)"
 
-Write-Host "Downloading release from $releaseUrl..." -ForegroundColor Green
-Invoke-WebRequest -Uri $releaseUrl -OutFile $zipPath
+if (-not [string]::IsNullOrWhiteSpace($localZipPath) -and (Test-Path $localZipPath)) {
+    $zipPath = $localZipPath
+    Write-Host "Using local release file: $zipPath" -ForegroundColor Green
+} else {
+    # --- Download Release ---
+    $releaseUrl = "https://github.com/Pennix/SshTunnelService/releases/download/v1.1.0/SshTunnelService-v1.1.0-win-x64.zip"
+    $zipPath = Join-Path $env:TEMP "SshTunnelService.zip"
 
+    Write-Host "Downloading release from $releaseUrl..." -ForegroundColor Green
+    Invoke-WebRequest -Uri $releaseUrl -OutFile $zipPath
+}
+
+# --- Unzip Release ---
 Write-Host "Creating installation directory: $InstallPath" -ForegroundColor Green
 New-Item -ItemType Directory -Force -Path $InstallPath
 
