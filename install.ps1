@@ -75,6 +75,7 @@ $openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
 $openFileDialog.InitialDirectory = Get-Location
 $openFileDialog.Filter = "ZIP Files (*.zip)|*.zip|All Files (*.*)|*.*"
 $openFileDialog.Title = "Select local release ZIP file"
+$downloaded = $false
 if ($openFileDialog.ShowDialog() -eq "OK" -and (Test-Path $openFileDialog.FileName)) {
     $zipPath = $openFileDialog.FileName
     Write-Host "Using local release file: $zipPath" -ForegroundColor Green
@@ -85,6 +86,7 @@ if ($openFileDialog.ShowDialog() -eq "OK" -and (Test-Path $openFileDialog.FileNa
 
     Write-Host "Downloading release from $releaseUrl..." -ForegroundColor Green
     Invoke-WebRequest -Uri $releaseUrl -OutFile $zipPath
+    $downloaded = $true
 }
 
 # --- Unzip Release ---
@@ -109,6 +111,8 @@ Write-Host "Starting service..." -ForegroundColor Green
 Start-Service -Name $serviceName
 
 # --- Cleanup ---
-Remove-Item -Path $zipPath
+if ($downloaded) {
+    Remove-Item -Path $zipPath
+}
 
 Write-Host "Installation complete! The SshTunnelService is now running." -ForegroundColor Yellow
