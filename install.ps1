@@ -9,6 +9,9 @@ param(
     [string]$InstallPath = "C:\Program Files\SshTunnelService"
 )
 
+# --- Add Windows Forms Assembly for File Dialogs ---
+Add-Type -AssemblyName System.Windows.Forms
+
 # --- Gather SSH Tunnel Parameters ---
 Write-Host "Please provide the details for your SSH tunnel." -ForegroundColor Cyan
 
@@ -25,7 +28,17 @@ $tunnel = @{
     Username = $tunnelUsername
 }
 
-$originalKeyPath = Read-Host -Prompt "Path to your SSH Private Key (e.g., C:\Users\user\.ssh\id_rsa)"
+# File selector for PrivateKeyPath
+$openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+$openFileDialog.InitialDirectory = [Environment]::GetFolderPath('UserProfile') + "\.ssh"
+$openFileDialog.Filter = "All Files (*.*)|*.*"
+$openFileDialog.Title = "Select your SSH Private Key"
+if ($openFileDialog.ShowDialog() -eq "OK") {
+    $originalKeyPath = $openFileDialog.FileName
+} else {
+    $originalKeyPath = Read-Host -Prompt "Path to your SSH Private Key (file dialog cancelled, please enter manually)"
+}
+
 $tunnel.LocalForward = (Read-Host -Prompt "Local Forwards (comma-separated, e.g., 8080:localhost:80,8443:localhost:443)").Split(',') | ForEach-Object { $_.Trim() }
 $tunnel.RemoteForward = (Read-Host -Prompt "Remote Forwards (comma-separated, e.g., 8888:localhost:8888)").Split(',') | ForEach-Object { $_.Trim() }
 
@@ -55,10 +68,15 @@ $appSettings = @{
 $appSettingsJson = $appSettings | ConvertTo-Json -Depth 5
 
 # --- Prompt for Local Release File ---
-$localZipPath = Read-Host -Prompt "Path to local release ZIP file (optional, press Enter to download from GitHub)"
+Write-Host ""
+Write-Host "Select local release ZIP file, or close dialog to download from GitHub." -ForegroundColor Cyan
 
-if (-not [string]::IsNullOrWhiteSpace($localZipPath) -and (Test-Path $localZipPath)) {
-    $zipPath = $localZipPath
+$openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+$openFileDialog.InitialDirectory = Get-Location
+$openFileDialog.Filter = "ZIP Files (*.zip)|*.zip|All Files (*.*)|*.*"
+$openFileDialog.Title = "Select local release ZIP file"
+if ($openFileDialog.ShowDialog() -eq "OK" -and (Test-Path $openFileDialog.FileName)) {
+    $zipPath = $openFileDialog.FileName
     Write-Host "Using local release file: $zipPath" -ForegroundColor Green
 } else {
     # --- Download Release ---
