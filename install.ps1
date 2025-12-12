@@ -37,7 +37,7 @@ $appSettings = @{
 $appSettingsJson = $appSettings | ConvertTo-Json -Depth 5
 
 # --- Download and Unzip Release ---
-$releaseUrl = "https://github.com/Pennix/SshTunnelService/releases/download/v1.0.0/SshTunnelService-v1.0.0-win-x64.zip"
+$releaseUrl = "https://github.com/Pennix/SshTunnelService/releases/download/v1.1.0/SshTunnelService-v1.1.0-win-x64.zip"
 $zipPath = Join-Path $env:TEMP "SshTunnelService.zip"
 
 Write-Host "Downloading release from $releaseUrl..." -ForegroundColor Green
