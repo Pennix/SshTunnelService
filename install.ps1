@@ -38,7 +38,7 @@ $appSettings = @{
     Logging = @{
         LogLevel = @{
             Default = "Information"
-            Microsoft.Hosting.Lifetime = "Information"
+            "Microsoft.Hosting.Lifetime" = "Information"
         }
     }
     Tunnels = @(
